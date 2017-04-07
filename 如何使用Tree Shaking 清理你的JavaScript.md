@@ -1,9 +1,9 @@
 ## 如何使用Tree Shaking 清理你的JavaScript ## 
 
 The world of JavaScript development can be frustrating and exciting.
-
+JavaScript的发展正变得令人激动和兴奋.
 Every day, new libraries and modules are published, and it can feel overwhelming to try to keep up. On the other hand, all of this change has its benefits. As a community, we’re heading more and more toward an ecosystem that’s easier to work in and reason about. We keep getting new candy, and it makes our lives better!
-
+每一天都有新的库和模块发布,并且在不断推进中.另一方面,这些变化同时也有它的好处. 作为一个社区,我们正在走向一个越来越容易工作在其中和理性的生态系统中.我们不断收获新的好的工具,并且正变得越来越棒!
 One JavaScript improvement that’s been getting some attention lately is the idea Tree Shaking. What’s that, you ask? Simply put, it’s a way to clean up your bundling process by excluding code you’re not using.
 We all hate bloat in our projects. Unused code increases mental overhead and makes it much harder to understand what’s going on. More importantly, it increases the size of the payload we’re sending to users in front-end projects.
 In this post, we’ll take a look at tree shaking with JavaScript. What it is, how it works, and how to get started using it.
