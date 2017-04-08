@@ -7,12 +7,21 @@ Every day, new libraries and modules are published, and it can feel overwhelming
 每一天都有新的库和模块发布,并且在不断推进中.另一方面,这些变化同时也有它的好处. 作为一个社区,我们正在走向一个越来越容易工作在其中和理性的生态系统中.我们不断收获新的好的工具,并且正变得越来越棒!
 
 One JavaScript improvement that’s been getting some attention lately is the idea Tree Shaking. What’s that, you ask? Simply put, it’s a way to clean up your bundling process by excluding code you’re not using.
+JavaScript界，一个最近正在受到关注的的想法是 Tree Shaking. 这是什么那？简单来说就是一个清理你打包过程，通过排除掉那些你并没有使用的代码.
+
 We all hate bloat in our projects. Unused code increases mental overhead and makes it much harder to understand what’s going on. More importantly, it increases the size of the payload we’re sending to users in front-end projects.
+我们都痛恨项目大小的膨胀.无用的代码加重了我们的精神压力,让我们更难以理解正在进行的工作.更严重的是,它增加了发送给用户的前端项目的体积大小.
+
 In this post, we’ll take a look at tree shaking with JavaScript. What it is, how it works, and how to get started using it.
 Let’s create a cleaner build for your project!
+在下面的介绍中,我们将概览tree shaking 在JavaScript中的应用-- 它是什么? 如何工作? 并且如何开始使用它... 让我们一起创建一个更干净的项目构建吧!
+
 Where Did It Come From?
 The idea of tree shaking has begun gaining traction in the JavaScript world thanks to Rich Harris’s Rollup project.
 Rollup is a JavaScript module bundler. From early on, it supported EcmaScript 6 (ES6) modules, which resulted in its creating smaller bundles. It also supports some sweet features like cyclical requires and export bindings.
+### Tree Shaking 从哪里来? ### 
+
+
 But perhaps the most unique feature of Rollup is the fact that it only requires modules that you’ve actually imported somewhere. This means that unused code never makes it into the bundle. Note that this is slightly different than Dead Code Elimination. Roman Luitikov does a good job explaining this distinction in his post about Tree Shaking.
 At the moment, a lot of people in the JS community are coalescing around Webpack as a build tool. Webpack’s maintainers are currently working on a Webpack 2 release. One of its interesting features is that it will support native ES6 modules without first transforming them into a CommonJS format. This is good, because tree shaking won’t work with CommonJS modules.
 Recently, the estimable Dr. Axel Rauschmayer wrote a popular post about setting up tree-shaking with Webpack 2. I decided to give it a try in my colleague Marc Garreau’s Redux Starter Kit, to see what it would actually take to get tree shaking to work in a full project. You can see the result of my experiments on my GitHub.
