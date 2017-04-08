@@ -20,8 +20,9 @@ Where Did It Come From?
 The idea of tree shaking has begun gaining traction in the JavaScript world thanks to Rich Harris’s Rollup project.
 Rollup is a JavaScript module bundler. From early on, it supported EcmaScript 6 (ES6) modules, which resulted in its creating smaller bundles. It also supports some sweet features like cyclical requires and export bindings.
 ### Tree Shaking 从哪里来? ### 
+tree shaking 的想法的不断产生要感谢Rich Harris的Rollup 项目.
 
-
+Rollup是一个JavaScript模块打包工具. 从一开始,它就支持ES6模块,导致其创建更小的包. 它也支持一些非常好的特性比如循环依赖和导出绑定.
 But perhaps the most unique feature of Rollup is the fact that it only requires modules that you’ve actually imported somewhere. This means that unused code never makes it into the bundle. Note that this is slightly different than Dead Code Elimination. Roman Luitikov does a good job explaining this distinction in his post about Tree Shaking.
 At the moment, a lot of people in the JS community are coalescing around Webpack as a build tool. Webpack’s maintainers are currently working on a Webpack 2 release. One of its interesting features is that it will support native ES6 modules without first transforming them into a CommonJS format. This is good, because tree shaking won’t work with CommonJS modules.
 Recently, the estimable Dr. Axel Rauschmayer wrote a popular post about setting up tree-shaking with Webpack 2. I decided to give it a try in my colleague Marc Garreau’s Redux Starter Kit, to see what it would actually take to get tree shaking to work in a full project. You can see the result of my experiments on my GitHub.
