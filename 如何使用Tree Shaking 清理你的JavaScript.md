@@ -41,13 +41,20 @@ How Does It Work?
 
 ### 它是如何工作的? ###
 The steps involved in tree shaking are fairly simple.
+tree shaking的运行步骤相当的简单.
 You write your ES6 code as normal, importing and exporting modules as needed. When it comes time to create a bundle, Webpack grabs all of your modules and puts them into a single file, but removes the export from code that’s not being imported anywhere. Next, you run a minification process, resulting in a bundle that excludes any dead code found along the way.
 If you’re curious, check Dr. Rauschmayer’s post for more details.
+你跟以前一样正常的书写ES6代码,需要import和export模块. 当需要去构建打包的时候,webpack抓取你的模块放入一个单一文件中,但是移除那些你代码中export出去但是并没有在任何地方import的模块.然后你运行一个分解进程,会在打包中去除未使用的代码. 如果您好奇，请查看Dr. Rauschmayer博士的更多信息。
 Setting It Up
+###如何设置###
 Since Webpack 2 is still in beta, you’ll need to update your package.json to point at the beta version. But before we do that let’s also talk about our Babel preset.
+因为webpack2还是beta版本,你需要升级你的package.json去制定beta版本. 但是在之前我们还是要去探讨一下babel配置.
 Typically, I use the es2015 preset, but this preset relies on the transform-es2015-modules-commonjs plugin, which won’t work for tree shaking. Dr. Rauschmayer pointed this out in his post. At the time of his writing, the best workaround was to copy and paste all of the plugins in that preset except transform-es2015-modules-commonjs.
+通常,我使用es2015设置,但是这个设置依赖 transform-es2015-modules-commonjs插件,它是无法再free shaking下工作的.Rauschmayer在他的帖子中指出了这一点。在撰写本文时，最好的解决方法是复制并粘贴该预设中的所有插件，除了transform-es2015-modules-commonjs。
 Thankfully, we can now get around this copy-and-pasting by including the es2015-native-modules or es2015-webpack preset instead. Both of these presets support native ES6 modules.
+幸运的是,我们现在可以通过包括es2015-native-modules 和 es2015-webpack 设置来绕开复制粘贴这种方式.
 So, let’s install Webpack 2 and the es2015-native-modules Babel preset by running npm install --save babel-preset-es2015-native-modules webpack@2.0.1-beta.
+
 You should see these packages appear in your package.json dependencies section:
 "dependencies": {
   "babel-preset-es2015-native-modules": "^6.6.0",
