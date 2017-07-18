@@ -41,21 +41,38 @@ How Does It Work?
 
 ### 它是如何工作的? ###
 The steps involved in tree shaking are fairly simple.
+
 tree shaking的运行步骤相当的简单.
+
 You write your ES6 code as normal, importing and exporting modules as needed. When it comes time to create a bundle, Webpack grabs all of your modules and puts them into a single file, but removes the export from code that’s not being imported anywhere. Next, you run a minification process, resulting in a bundle that excludes any dead code found along the way.
 If you’re curious, check Dr. Rauschmayer’s post for more details.
-你跟以前一样正常的书写ES6代码,需要import和export模块. 当需要去构建打包的时候,webpack抓取你的模块放入一个单一文件中,但是移除那些你代码中export出去但是并没有在任何地方import的模块.然后你运行一个分解进程,会在打包中去除未使用的代码. 如果您好奇，请查看Dr. Rauschmayer博士的更多信息。
+
+你跟以前一样正常的书写ES6代码,需要import和export模块. 当需要去构建打包的时候,webpack抓取你的模块放入一个单一文件中,但是移除那些你代码中export出去但是并没有在任何地方import的模块.然后你运行一个压缩过程,会在打包中去除未使用的代码. 如果您好奇，请查看Dr. Rauschmayer博士的更多信息。
+
 Setting It Up
+
 ###如何设置###
+
 Since Webpack 2 is still in beta, you’ll need to update your package.json to point at the beta version. But before we do that let’s also talk about our Babel preset.
+
 因为webpack2还是beta版本,你需要升级你的package.json去制定beta版本. 但是在之前我们还是要去探讨一下babel配置.
+
 Typically, I use the es2015 preset, but this preset relies on the transform-es2015-modules-commonjs plugin, which won’t work for tree shaking. Dr. Rauschmayer pointed this out in his post. At the time of his writing, the best workaround was to copy and paste all of the plugins in that preset except transform-es2015-modules-commonjs.
+
 通常,我使用es2015设置,但是这个设置依赖 transform-es2015-modules-commonjs插件,它是无法再free shaking下工作的.Rauschmayer在他的帖子中指出了这一点。在撰写本文时，最好的解决方法是复制并粘贴该预设中的所有插件，除了transform-es2015-modules-commonjs。
+
 Thankfully, we can now get around this copy-and-pasting by including the es2015-native-modules or es2015-webpack preset instead. Both of these presets support native ES6 modules.
+
 幸运的是,我们现在可以通过包括es2015-native-modules 和 es2015-webpack 设置来绕开复制粘贴这种方式.
+
 So, let’s install Webpack 2 and the es2015-native-modules Babel preset by running npm install --save babel-preset-es2015-native-modules webpack@2.0.1-beta.
 
+我们来安装webpack2 和 es2015-native-modules babel配置 通过运行 npm install --save babel-preset-es2015-native-modules webpack@2.0.1-beta.
+
 You should see these packages appear in your package.json dependencies section:
+
+你会看见这些包出现在package.json 中的 dependencies 部分
+
 "dependencies": {
   "babel-preset-es2015-native-modules": "^6.6.0",
   "webpack": "^2.0.1-beta"
@@ -63,12 +80,18 @@ You should see these packages appear in your package.json dependencies section:
 }
 
 You’ll also need to update your .babelrc file to use the new preset:
+
+你同样需要升级你的.babelrc 文件来使用新的配置.
+
 {
   presets: ["es2015-native-modules", "react"]
 }
 
 Remember that we need to run a minification step during our bundle in order to take advantage of dead code elimination.
 Change the build script to use the --optimize-minimize flag on our call to the Webpack executable:
+
+记住我们需要在打包中运行一个压缩过程来利用死代码消除的优势.
+
 // package.json
 ...
   "scripts": {
@@ -77,6 +100,9 @@ Change the build script to use the --optimize-minimize flag on our call to the W
   },
 ...
 Finally, update your Webpack config to make sure we’re only listing one loader at a time. This is for compatibility with Webpack 2, since it expects a slightly different syntax in the config.
+
+最后,升级你的webpack配置来确保我们一次只列出一个loader.因为要适配webpack2,因此我们在设置中的使用的语法有些区别.
+
 // webpack.config.js
 ...
 loaders: [
@@ -87,10 +113,18 @@ loaders: [
     include: __dirname
   },
 ]
+...
+
 Taking It For A Spin
 Now we have everything we need in place to run a build with tree shaking.
 Let’s try it out!
+
+现在我们只需要执行build操作来完成tree shaking. 来试一下!
+
 To make sure everything is working, we’ll need to export some modules that we’re not importing. In my example, I decided to create some useless functions:
+
+为了确保工作,我们需要export 出一些module 我们没有引入的. 比如,我决定创建一些无用的函数.
+
 // place-order.js
 
 export function makeMeASandwich() {
@@ -102,6 +136,8 @@ export function sudoMakeMeASandwich() {
 }
 
 Then in my actual project code, I only imported and used one of them.
+然后在我实际的项目代码,我只import 和使用其中一个.
+
 // index.js
 
 import { sudoMakeMeASandwich } from './place-order.js';
@@ -109,27 +145,59 @@ sudoMakeMeASandwich();
 
 When we run npm run build, we should end up with a minified build that excludes the makeMeASandwich code.
 When you run this command, you’ll see an output that accounts for removed modules. In my example, I saw a bunch of warnings from dependencies such as React and Webpack Hot Middleware.
+
+当我们执行build操作时, 我们应该结束一个排除makeMeASandwich代码的最小化构建。
+当你执行这个命令的时候,你会看见一个输出用于解释删除的模块. 在我的例子中,我看见一些warnings例如react 和 webpack热更新中间件的依赖.
+
 I left a few of them in the pasted output below, but the line that’s of most interest of us is Dropping unused function makeMeASandwich, since that’s the code we’re checking on.
+我在下面的粘贴输出中留下了一些，但是我们最感兴趣的是将未使用的函数makeMeASandwich删除，因为这是我们正在检查的代码。
+
 WARNING in bundle.js from UglifyJs
 ...
 Dropping unused function makeMeASandwich [./src/place-order.js:1,16]
-...
 Dropping unused variable DOCUMENT_FRAGMENT_NODE_TYPE [./~/react/lib/ReactEventListener.js:26,0]
 Condition always true [./~/style-loader!./~/css-loader!./~/sass-loader!./src/assets/stylesheets/base.scss:10,0]
 Condition always false [(webpack)-hot-middleware/process-update.js:9,0]
 Dropping unreachable code [(webpack)-hot-middleware/process-update.js:10,0]
 Now if we open up the minified bundle and search for the contents of the makeMeASandwich function, we won’t be able to find it. Indeed, searching for make sandwich: operation not permitted yields no results. It works for one open faced club sandwich coming right up, though.
 Success!
+...
 Going Further: Shaking Dependencies
+
+更进一步: 消除依赖
+
 Removing your own unused code is all well and good, but it’s probably only going to be a drop in the bucket of your overall bundle. The place where tree shaking really shines is in helping remove unused code from dependencies.
 If you’re pulling in a whole package, but only using a single export from it, why would you send the rest of the package to your users?
+
+消除你的不使用的代码是不错的, 但是可能只是整个bundle里面的一个整体下降. shaking 真正闪光的地方是根据依赖关系删除无用的代码.
+
 Roman Luitikov’s post did a great job of walking through what it looks like to tree shake a dependency by showing what happens if you pull in Lodash, but only import and use the first function. The rest of Lodash gets thrown out, and the resulting build is much smaller!
+
+Roman Luitikov的文章做了一个很好的工作, 通过引入lodash,但是只import和使用第一个函数,来看通过tree shake 依赖来看会发生什么. lodash余下的函数都被删除,build包变得更小!
+
 Since Roman has already covered this, I won’t go into the details of what that looks like here, but you can see it in my example if you’re curious.
+
+因为Roman已经涵盖了这一点,我不会去介绍更多的细节,如果你好奇,你可以在我的例子中看到.
+
 The main point to understand is that when you consider the sizeable amount of unused code that ends up in a typical JS project when you run npm install, removing it with tree shaking can yield huge savings on bundle size.
 Run your next project on Engine Yard START FREE TRIAL 
+
+你要了解重点是,当你在一个典型JS项目中运行npm install 时考虑到大量无用的代码,通过tree shaking 能缩减大量bundle包大小.
+
 Conclusion
+
+###结论###
+
 Being a front-end JavaScript developer comes with a specific set of concerns. Because you’re sending a large amount of code execution off onto your user’s browser, the size of your payload can get really large. We do our users a huge service by being sensitive to the amount of data that we’re sending them.
+
+作为一个前端JavaScript开发者带来了一些特别的关注点.因为你发送了大量代码执行在你的用户的浏览器中, 载荷的大小可以变得非常大. 对发送的数据量敏感,我们为用户提供了大量服务.
+
 Tree shaking offers a great way to cut down on your bundle size, and it’s easy to get set up in your existing project. I’m excited to see how this practice evolves as more of the community begins to embrace it and Webpack 2 is released.
+
+tree shaking 提供了一个绝佳的方式来减小你的bundle的大小并且十分容易在已有的项目上配置.我很兴奋的看到越来越多的社区在webpack2发布后开始拥抱它.
+
 In the meantime, I would recommend reading up on some other examples of tree shaking and more of the features coming in Webpack 2.
 Until next time, happy coding!
 P. S. If you decide to give tree shaking a try in your existing project, we’d love to hear how it goes. Leave us a comment!
+
+同时
